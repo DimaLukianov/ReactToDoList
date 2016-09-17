@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Hello React!</title>
+    <script src="https://unpkg.com/react@15.3.1/dist/react.js"></script>
+    <script src="https://unpkg.com/react-dom@15.3.1/dist/react-dom.js"></script>
+    <script src="https://unpkg.com/babel-core@5.8.38/browser.min.js"></script>
+  </head>
+  <body>
+    <div id="todo"></div>
+    <script type="text/babel">
+
+
+      class ToDoList extends React.Component {
+        constructor() {
+          super();
+          this.state = {
+            items: [],
+            current_id: 0
+          };
+          this.addItem = this.addItem.bind(this);
+        }
+        addItem() {
+          let text = document.getElementById('itemText').value;
+          if(text){
+            let newItem = [{id: this.state.current_id, text: text }];
+
+            this.setState({items: this.state.items.concat(newItem)});
+            document.getElementById('itemText').value = '';
+            this.setState({current_id: (this.state.current_id + 1)});
+          } else {
+            alert('Enter data!');
+          }
+        }
+
+        render(){
+          return (
+            <div className="todo-list">
+              <h1>First TODO list</h1>
+      
+              <NewItemForm addItem={this.addItem} />
+              <ItemsList items={this.state.items} />
+            </div>
+          );
+        }
+      }
+
+      class ItemsList extends React.Component {
+        render(){
+          return (
+            <ol>
+              {this.props.items.map(function(item) {
+                return <Item key={item.id} data={item} />;
+              })}
+            </ol>
+          );
+        }
+      }
+
+      class Item extends React.Component {
+        render(){
+          return <li>{this.props.data.text}</li>;
+        }
+      }
+
+      class NewItemForm extends React.Component {
+        render(){
+          return (
+            <div className="addForm">
+              <input id="itemText" type="text" />
+              <button onClick={this.props.addItem}>Add</button>
+            </div>
+          );
+        }
+      }
+
+      ReactDOM.render(
+        <ToDoList />,
+        document.getElementById('todo')
+      );
+    </script>
+  </body>
+</html>
